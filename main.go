@@ -46,11 +46,12 @@ func NewApp() (*App, error) {
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS urls (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			original_url TEXT NOT NULL,
+			original_url TEXT NOT NULL UNIQUE,
 			short_key TEXT NOT NULL UNIQUE,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		);
 		CREATE UNIQUE INDEX IF NOT EXISTS idx_short_key ON urls(short_key);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_original_url ON urls(original_url);
 		CREATE INDEX IF NOT EXISTS idx_original_url ON urls(original_url);
 	`)
 
@@ -68,6 +69,14 @@ func generateShortKey() string {
 }
 
 func (a *App) createShortURL(originalURL string) (string, error) {
+	var existingShortKey string
+
+	err := a.DB.QueryRow("SELECT short_key FROM urls WHERE original_url = ?", originalURL).Scan(&existingShortKey)
+
+	if err == nil && existingShortKey != "" {
+		return existingShortKey, nil
+	}
+
 	for i := 0; i < MAX_ATTEMPTS_CREATE_UNIQ_KEY; i++ {
 		shortKey := generateShortKey()
 		result, errInsert := a.DB.Exec("INSERT INTO urls (original_url, short_key) VALUES (?, ?)", originalURL, shortKey)
