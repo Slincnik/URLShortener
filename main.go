@@ -61,7 +61,7 @@ func NewApp() (*App, error) {
 func generateShortKey() string {
 	uuid := uuid.New()
 	hash := sha256.Sum256(uuid[:])
-	return base64.StdEncoding.EncodeToString(hash[:8])
+	return base64.RawURLEncoding.EncodeToString(hash[:8])
 }
 
 func (a *App) createShortURL(originalURL string) (string, error) {
