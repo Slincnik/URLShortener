@@ -116,6 +116,8 @@ func (a *App) handleCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Creating short URL for %s", req.URL)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(CreateResponse{ShortUrl: shortKey})
 }
@@ -137,6 +139,8 @@ func (a *App) handleRedirect(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("Redirecting %s to %s", shortKey, originalURL)
+
 	http.Redirect(w, r, originalURL, http.StatusFound)
 }
 
@@ -147,6 +151,8 @@ func main() {
 		log.Fatalf("Failed to create app: %v", err)
 	}
 	defer app.DB.Close()
+
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	mux := http.NewServeMux()
 
