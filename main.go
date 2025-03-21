@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"net/url"
@@ -81,8 +82,11 @@ func (a *App) createShortURL(originalURL string) (string, error) {
 		if strings.Contains(errInsert.Error(), "UNIQUE constraint failed") {
 			continue // Попробовать другой ключ
 		}
+
+		return "", errInsert
 	}
 
+	return "", errors.New("Failed to generate unique short key after multiple attempts")
 }
 
 func (a *App) handleCreate(w http.ResponseWriter, r *http.Request) {
