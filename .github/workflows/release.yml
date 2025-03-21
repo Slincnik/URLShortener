@@ -28,11 +28,11 @@ jobs:
         with:
           push: true
           tags: |
-            user/urlshortener:${{ github.event.release.tag_name }}
-            user/urlshortener:latest
+            slincnik/urlshortener:${{ github.event.release.tag_name }}
+            slincnik/urlshortener:latest
 
       - name: Show pushed tags
         run: |
           echo "Pushed tags:"
-          echo "1. myapp:${{ github.event.release.tag_name }}"
-          echo "2. myapp:latest"
+          echo "1. slincnik/urlshortener:${{ github.event.release.tag_name }}"
+          echo "2. slincnik/urlshortener:latest"
