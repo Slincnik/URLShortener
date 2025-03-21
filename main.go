@@ -18,6 +18,8 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+const MAX_ATTEMPTS_CREATE_UNIQ_KEY = 5
+
 type App struct {
 	DB *sql.DB
 }
@@ -65,7 +67,7 @@ func generateShortKey() string {
 }
 
 func (a *App) createShortURL(originalURL string) (string, error) {
-	for {
+	for i := 0; i < MAX_ATTEMPTS_CREATE_UNIQ_KEY; i++ {
 		shortKey := generateShortKey()
 		result, errInsert := a.DB.Exec("INSERT INTO urls (original_url, short_key) VALUES (?, ?)", originalURL, shortKey)
 
