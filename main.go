@@ -121,7 +121,7 @@ func (a *App) handleCreate(w http.ResponseWriter, r *http.Request) {
 	shortKey, err := a.createShortURL(req.URL)
 
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		http.Error(w, "Failed to create short URL", http.StatusBadRequest)
 		return
 	}
 
