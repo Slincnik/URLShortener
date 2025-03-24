@@ -37,17 +37,6 @@ func getEnvWithDefault(key, defaultValue string) string {
 	return defaultValue
 }
 
-func getEnv(key string) string {
-	value := os.Getenv(key)
-
-	if value == "" {
-		log.Fatalf("Missing environment variable: %s", key)
-		return ""
-	}
-
-	return value
-}
-
 func getEnvInt(key string, defaultValue int) int {
 	if value := os.Getenv(key); value != "" {
 		intValue, _ := strconv.Atoi(value)

@@ -53,7 +53,9 @@ func (u *URLHandler) HandleCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(models.CreateResponse{ShortURL: shortKey})
+	if err = json.NewEncoder(w).Encode(models.CreateResponse{ShortURL: shortKey}); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	}
 }
 
 func (u *URLHandler) HandleRedirect(w http.ResponseWriter, r *http.Request) {
