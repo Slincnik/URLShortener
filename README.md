@@ -10,6 +10,12 @@ docker run -d -p 80:8080 slincnik/urlshortener
 
 This will launch the container in detached mode and map port `8080` inside the container to port `80` on the host machine.
 
+## ENV Variables
+1. `DB_PATH` - specifies where the sqlite database will be located.
+2. `MAX_DB_CONNS` - max allowed database connections.
+3. `IDLE_DB_CONNS` - max number of connections in the idle connection pool.
+4. `MAX_ATTEMPTS_CREATE_KEY` - max number of attempts to create a short key
+
 ## API Endpoints
 
 ### 1. Create a Shortened URL
