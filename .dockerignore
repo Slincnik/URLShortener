@@ -1,0 +1,6 @@
+.github
+*.env
+.DS_Store
+LICENSE
+README.*
+*.db

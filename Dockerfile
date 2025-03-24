@@ -6,9 +6,9 @@ COPY go.mod go.sum ./
 
 RUN go mod download
 
-COPY *.go ./
+COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /urlshortener
+RUN CGO_ENABLED=0 GOOS=linux go build -o /urlshortener ./cmd/shortener
 
 FROM alpine:3.20 as build-release
 
@@ -19,3 +19,5 @@ COPY --from=build-stage /urlshortener /urlshortener
 EXPOSE 8080
 
 ENTRYPOINT ["/urlshortener"]
+
+HEALTHCHECK CMD curl --fail http://localhost/health || exit 1
