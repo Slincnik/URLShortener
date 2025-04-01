@@ -81,7 +81,7 @@ func (r *SQLiteRepo) GetOriginalURL(shortKey string) (string, error) {
 
 	err := r.db.QueryRow("SELECT original_url FROM urls WHERE short_key = ?", shortKey).Scan(&originalURL)
 
-	if err != nil || err != sql.ErrNoRows {
+	if err != nil {
 		log.Printf("Failed to get original URL by short key: %v", err)
 		return "", err
 	}
