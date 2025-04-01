@@ -78,7 +78,11 @@ func NewUrlRepo(cfg *config.Config) *UrlRepo {
 	sqlDB.SetMaxIdleConns(cfg.IdleDBConns)
 
 	if cfg.Env == config.EnvDev {
-		db.Migrator().AutoMigrate(&URL{})
+		err := db.Migrator().AutoMigrate(&URL{})
+
+		if err != nil {
+			log.Fatalf("Failed to migrate database: %v", err)
+		}
 	}
 
 	return &UrlRepo{db: db}
