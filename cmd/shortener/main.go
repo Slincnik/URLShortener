@@ -56,11 +56,7 @@ func main() {
 }
 
 func setupRouter(cfg *config.Config) (*chi.Mux, func()) {
-	repository := repositories.NewSQLiteRepo(cfg)
-
-	if err := repository.Migrate(); err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
-	}
+	repository := repositories.NewUrlRepo(cfg)
 
 	service := services.NewURLService(repository, cfg)
 
