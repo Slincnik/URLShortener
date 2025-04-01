@@ -8,9 +8,15 @@ import (
 	"github.com/subosito/gotenv"
 )
 
+const (
+	EnvDev  = "DEV"
+	EnvProd = "PROD"
+)
+
 type Config struct {
 	DBType               string // sqlite, postgres
 	DBPath               string // only sqlite
+	Env                  string
 	DBHost               string
 	DBPort               int
 	DBUser               string
@@ -28,8 +34,15 @@ func LoadConfig(path string) (config *Config) {
 		log.Fatalf("Failed to load environment variables: %v", err)
 	}
 
+	env := getEnvWithDefault("ENV", EnvProd)
+	if !isValidEnv(env) {
+		log.Printf("Invalid environment variable: %s. Defaulting to %s", env, EnvProd)
+		env = EnvProd
+	}
+
 	return &Config{
 		DBType:               getEnvWithDefault("DB_TYPE", "sqlite"),
+		Env:                  env,
 		DBPath:               getEnvWithDefault("DB_PATH", "file:urls.db?_fk=1"),
 		DBHost:               getEnvWithDefault("DB_HOST", "localhost"),
 		DBPort:               getEnvInt("DB_PORT", 5432),
@@ -56,4 +69,8 @@ func getEnvInt(key string, defaultValue int) int {
 		return intValue
 	}
 	return defaultValue
+}
+
+func isValidEnv(env string) bool {
+	return env == EnvDev || env == EnvProd
 }
