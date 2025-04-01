@@ -9,7 +9,13 @@ import (
 )
 
 type Config struct {
-	DBPath               string
+	DBType               string // sqlite, postgres
+	DBPath               string // only sqlite
+	DBHost               string
+	DBPort               int
+	DBUser               string
+	DBPassword           string
+	DBName               string
 	MaxDBConns           int
 	IdleDBConns          int
 	MaxAttemptsCreateKey int
@@ -23,7 +29,13 @@ func LoadConfig(path string) (config *Config) {
 	}
 
 	return &Config{
+		DBType:               getEnvWithDefault("DB_TYPE", "sqlite"),
 		DBPath:               getEnvWithDefault("DB_PATH", "file:urls.db?_fk=1"),
+		DBHost:               getEnvWithDefault("DB_HOST", "localhost"),
+		DBPort:               getEnvInt("DB_PORT", 5432),
+		DBUser:               getEnvWithDefault("DB_USER", "postgres"),
+		DBPassword:           getEnvWithDefault("DB_PASSWORD", "postgres"),
+		DBName:               getEnvWithDefault("DB_NAME", "shortener"),
 		MaxDBConns:           getEnvInt("MAX_DB_CONNS", 20),
 		IdleDBConns:          getEnvInt("IDLE_DB_CONNS", 10),
 		MaxAttemptsCreateKey: getEnvInt("MAX_ATTEMPTS_CREATE_KEY", 5),
